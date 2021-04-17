@@ -14,11 +14,6 @@ rm -rf /tmp/v2ray
 install -d /usr/local/etc/v2ray
 cat << EOF > /usr/local/etc/v2ray/config.json
 {
-  "log": {
-        "access": "/var/log/v2ray/access.log",
-        "error": "/var/log/v2ray/error.log",
-        "loglevel": "warning"
-    },
   "inbounds": [
     {
     "port":$PORT,
@@ -36,7 +31,7 @@ cat << EOF > /usr/local/etc/v2ray/config.json
       "streamSettings": {
         "network": "ws", 
         "wsSettings": {
-	  "path":"$PATH"
+	        "path":"$PATH"
         }
       },
       "sniffing": {
