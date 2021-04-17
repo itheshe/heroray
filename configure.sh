@@ -14,33 +14,73 @@ rm -rf /tmp/v2ray
 install -d /usr/local/etc/v2ray
 cat << EOF > /usr/local/etc/v2ray/config.json
 {
-    "inbounds": [
-        {
-            "port": $PORT,
-            "protocol": "vless",
-            "settings": {
-                "clients": [
-                    {
-                        "id": "$UUID",
-                        "alterId": 0
-                    }
-                ],
-                "disableInsecureEncryption": true
-            },
-            "streamSettings": {
-                "network": "ws",
-				"wsSettings": {
-					"path":"$PATH"
-				}
-            }
+  "log": {
+        "access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log",
+        "loglevel": "warning"
+    },
+  "inbounds": [
+    {
+    "port":$PORT,
+      "tag": "VLESS-in", 
+      "protocol": "VLESS", 
+      "settings": {
+        "clients": [
+          {
+	        "id":"$UUID",
+            "alterId": 0
+          }
+        ],
+	    "decryption": "none"
+      }, 
+      "streamSettings": {
+        "network": "ws", 
+        "wsSettings": {
+	  "path":"$PATH"
         }
-    ],
-    "outbounds": [
-        {
-            "protocol": "freedom"
-        }
+      },
+      "sniffing": {
+        "enabled": true, 
+        "destOverride": ["http", "tls"]
+      }
+    }
+  ], 
+  "outbounds": [
+    {
+      "protocol": "freedom", 
+      "settings": { }, 
+      "tag": "direct"
+    }, 
+    {
+      "protocol": "blackhole", 
+      "settings": { }, 
+      "tag": "blocked"
+    }
+  ], 
+  "dns": {
+    "servers": [
+      "https+local://1.1.1.1/dns-query",
+	  "1.1.1.1",
+	  "1.0.0.1",
+	  "8.8.8.8",
+	  "8.8.4.4",
+	  "localhost"
     ]
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "VLESS-in"
+        ],
+        "outboundTag": "direct"
+      }
+    ]
+  }
 }
+
 EOF
 
 # Run V2Ray
