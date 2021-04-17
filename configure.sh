@@ -29,10 +29,7 @@ cat << EOF > /usr/local/etc/v2ray/config.json
 	    "decryption": "none"
       }, 
       "streamSettings": {
-        "network": "ws", 
-        "wsSettings": {
-	        "path":"$PATH"
-        }
+        "network": "ws"
       },
       "sniffing": {
         "enabled": true, 
@@ -75,7 +72,6 @@ cat << EOF > /usr/local/etc/v2ray/config.json
     ]
   }
 }
-
 EOF
 
 # Run V2Ray
